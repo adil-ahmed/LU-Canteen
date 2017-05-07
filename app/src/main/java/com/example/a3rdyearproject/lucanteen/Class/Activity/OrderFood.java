@@ -14,15 +14,26 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.a3rdyearproject.lucanteen.Class.JavaClass.Food;
 import com.example.a3rdyearproject.lucanteen.R;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseError;
+import android.widget.AdapterView.OnItemSelectedListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class OrderFood extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class OrderFood extends AppCompatActivity implements OnItemSelectedListener, AdapterView.OnItemClickListener  {
     Spinner foodCategory;
     EditText quantity,address,phoneNumber;
     Button amount;
+    Firebase firebase;
+   public ArrayList<String> foodNameList;
+    public ArrayList<String> foodPriceList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,16 +46,28 @@ public class OrderFood extends AppCompatActivity implements AdapterView.OnItemCl
         amount = (Button) findViewById(R.id.amount);
 
 
+
         //foodCategory.setOnItemClickListener(this);
+        foodCategory.setOnItemSelectedListener(this);
+
 
         // Spinner Drop down elements
         ArrayList<String> categories = new ArrayList<String>();
+        /*Admin admin = new Admin();
+        for(int i=0; i<admin.foodNameList.size(); i++)
+        {
+            categories.add(admin.foodNameList.get(i));
+        }*/
+
         categories.add("Singara");
         categories.add("Somosa");
         categories.add("Burger");
         categories.add("Sandwich");
         categories.add("Hot dog");
         categories.add("Petis");
+
+
+
 
 
 
@@ -59,21 +82,7 @@ public class OrderFood extends AppCompatActivity implements AdapterView.OnItemCl
 
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-
-        // On selecting a spinner item
-
-        String item = parent.getItemAtPosition(position).toString();
-
-        // Showing selected spinner item
-        Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
-    }
-    public void onNothingSelected(AdapterView<?> arg0)
-    {
-        // TODO Auto-generated method stub
-    }
 
 
 
@@ -119,5 +128,25 @@ public class OrderFood extends AppCompatActivity implements AdapterView.OnItemCl
     }
 
 
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
+
+
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        // On selecting a spinner item
+        String item = adapterView.getItemAtPosition(i).toString();
+
+        // Showing selected spinner item
+        Toast.makeText(adapterView.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
 }

@@ -16,15 +16,13 @@
         <activity android:name=".Class.Activity.UserForgotPassword">
         </activity>
         <activity android:name=".Class.Activity.Admin">
+
         </activity>
         <activity android:name=".Class.Activity.UserSignIn">
+
         </activity>
         <activity android:name=".Class.Activity.NormalUser">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
         </activity>
         <activity android:name=".Class.Activity.InsertDataAdminPanel">
         </activity>
@@ -35,6 +33,7 @@
             android:theme="@style/no_action_bar">
         </activity>
         <activity android:name=".Class.Activity.OrderFood">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

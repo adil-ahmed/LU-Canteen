@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.util.ArrayMap;
+import android.widget.Toast;
 
 import com.example.a3rdyearproject.lucanteen.Class.Adapter.CustomListAdapter;
 import com.example.a3rdyearproject.lucanteen.Class.JavaClass.Food;
@@ -32,8 +33,8 @@ public class Admin extends AppCompatActivity {
 
     private Firebase firebase;
     private ListView listView;
-    //private ArrayList<String> foodNameList;
-    //private ArrayList<String> foodPriceList;
+    public ArrayList<String> foodNameList;
+    public ArrayList<String> foodPriceList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -42,9 +43,11 @@ public class Admin extends AppCompatActivity {
         setContentView(R.layout.activity_admin);
 
         listView = (ListView) findViewById(R.id.listView);
+        //foodNameList = new ArrayList<String>();
+       //foodPriceList = new ArrayList<String>();
 
 
-       // dataReady();
+        //dataReady();
 
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
 
@@ -56,12 +59,15 @@ public class Admin extends AppCompatActivity {
             {
                 TextView foodName = (TextView) v.findViewById(R.id.foodNameStyle);
                 TextView foodPrice = (TextView) v.findViewById(R.id.foodPriceStyle);
-                /*foodName.setText(model.getFoodName());
-                foodPrice.setText(model.getFoodPrice());*/
+             // foodNameList.add(model.getFoodName()); // from student class taking the list of name
+               // foodPriceList.add(model.getFoodPrice());
+
+
                 foodName.setText(model.getFoodName());
                 foodPrice.setText(model.getFoodPrice());
 
             }
+
 
 
         };
@@ -71,27 +77,29 @@ public class Admin extends AppCompatActivity {
 
     }
 
-   /* public void dataReady(){
+    public void dataReady()
+    {
 
         foodNameList = new ArrayList<String>();
         foodPriceList = new ArrayList<String>();
 
         firebase = new Firebase("https://lu-canteen.firebaseio.com/Food");
 
-        firebase.addValueEventListener(new ValueEventListener() {
+        firebase.addValueEventListener(new ValueEventListener()
+        {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
                 for(DataSnapshot studentSnapshot: dataSnapshot.getChildren())
                 {
                     Food food = studentSnapshot.getValue(Food.class);
-                    *//*String str = studentSnapshot.getKey();
+                   // String str = studentSnapshot.getKey();
 
-                    Log.e("key", str);*//*
+                   // Log.e("key", str);
 
                     foodNameList.add(food.getFoodName()); // from student class taking the list of name
                     foodPriceList.add(food.getFoodPrice()); // from student class taking the list of age
-                    *//*Toast.makeText(getApplicationContext(),student.getName()+" "+student.getAge(),Toast.LENGTH_SHORT).show();*//*
+                    //Toast.makeText(getApplicationContext(),student.getName()+" "+student.getAge(),Toast.LENGTH_SHORT).show();
                 }
 
                 if(foodNameList.size()>0) {
@@ -100,6 +108,7 @@ public class Admin extends AppCompatActivity {
                     listView.setAdapter(customListAdapter); // to make custom design go to CustomlistAdapter class
                     customListAdapter.notifyDataSetChanged();
                 }
+
             }
 
             @Override
@@ -108,7 +117,7 @@ public class Admin extends AppCompatActivity {
 
             }
         });
-    }*/
+    }
 
 
 
