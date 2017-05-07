@@ -37,19 +37,18 @@ public class Admin extends AppCompatActivity {
     public ArrayList<String> foodPriceList;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin);
 
         listView = (ListView) findViewById(R.id.listView);
         //foodNameList = new ArrayList<String>();
-       //foodPriceList = new ArrayList<String>();
+        //foodPriceList = new ArrayList<String>();
 
 
-        //dataReady();
+      //  dataReady();
 
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+        final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
 
         FirebaseListAdapter<Food> adapter = new FirebaseListAdapter<Food>(Admin.this,Food.class,
                 R.layout.style_admin,databaseReference.child("Food"))
@@ -61,7 +60,6 @@ public class Admin extends AppCompatActivity {
                 TextView foodPrice = (TextView) v.findViewById(R.id.foodPriceStyle);
              // foodNameList.add(model.getFoodName()); // from student class taking the list of name
                // foodPriceList.add(model.getFoodPrice());
-
 
                 foodName.setText(model.getFoodName());
                 foodPrice.setText(model.getFoodPrice());
@@ -77,32 +75,28 @@ public class Admin extends AppCompatActivity {
 
     }
 
-    public void dataReady()
-    {
+    public void dataReady() {
 
         foodNameList = new ArrayList<String>();
         foodPriceList = new ArrayList<String>();
 
         firebase = new Firebase("https://lu-canteen.firebaseio.com/Food");
 
-        firebase.addValueEventListener(new ValueEventListener()
-        {
+        firebase.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot)
-            {
-                for(DataSnapshot studentSnapshot: dataSnapshot.getChildren())
-                {
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot studentSnapshot : dataSnapshot.getChildren()) {
                     Food food = studentSnapshot.getValue(Food.class);
-                   // String str = studentSnapshot.getKey();
+                    String str = studentSnapshot.getKey();
 
-                   // Log.e("key", str);
+                    Log.e("key", str);
 
                     foodNameList.add(food.getFoodName()); // from student class taking the list of name
                     foodPriceList.add(food.getFoodPrice()); // from student class taking the list of age
                     //Toast.makeText(getApplicationContext(),student.getName()+" "+student.getAge(),Toast.LENGTH_SHORT).show();
                 }
 
-                if(foodNameList.size()>0) {
+                if (foodNameList.size() > 0) {
                     CustomListAdapter customListAdapter = new CustomListAdapter(Admin.this,
                             foodNameList, foodPriceList);
                     listView.setAdapter(customListAdapter); // to make custom design go to CustomlistAdapter class
@@ -112,13 +106,11 @@ public class Admin extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(FirebaseError firebaseError)
-            {
+            public void onCancelled(FirebaseError firebaseError) {
 
             }
         });
     }
-
 
 
     @Override
@@ -142,19 +134,15 @@ public class Admin extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.logOut)
-        {
+        if (id == R.id.logOut) {
             FirebaseAuth.getInstance().signOut();
-            Intent intent = new Intent(Admin.this,UserSignIn.class);
+            Intent intent = new Intent(Admin.this, UserSignIn.class);
             startActivity(intent);
-        }
-        else if(id == R.id.adminPanel)
-        {
-            Intent intent = new Intent(Admin.this,InsertDataAdminPanel.class);
+        } else if (id == R.id.adminPanel) {
+            Intent intent = new Intent(Admin.this, InsertDataAdminPanel.class);
             startActivity(intent);
 
         }
-
 
 
         return super.onOptionsItemSelected(item);
