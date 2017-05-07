@@ -1,6 +1,10 @@
 package com.example.a3rdyearproject.lucanteen.Class.Activity;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,13 +36,18 @@ import com.google.firebase.database.FirebaseDatabase;
 import android.widget.AdapterView.OnItemSelectedListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class OrderFood extends AppCompatActivity implements OnItemSelectedListener, AdapterView.OnItemClickListener {
     Spinner foodCategory;
     EditText quantity, address, phoneNumber;
     Button amount;
     Firebase firebase;
+    String foodItemName;
+    private ProgressDialog progressDialog;
+    String foodPrice;
     public ArrayList<String> foodNameList;
     public ArrayList<String> foodPriceList;
 
@@ -52,26 +61,85 @@ public class OrderFood extends AppCompatActivity implements OnItemSelectedListen
         phoneNumber = (EditText) findViewById(R.id.phoneNumber);
         amount = (Button) findViewById(R.id.amount);
 
+
+
         dataReady();
-        //foodCategory.setOnItemClickListener(this);
+
+
         foodCategory.setOnItemSelectedListener(this);
 
 
-        // Spinner Drop down elements
-        final ArrayList<String> categories = new ArrayList<String>();
-        /*Admin admin = new Admin();
-        for(int i=0; i<admin.foodNameList.size(); i++)
-        {
-            categories.add(admin.foodNameList.get(i));
-        }*/
+        firebase = new Firebase("https://lu-canteen.firebaseio.com/FoodOrder");
+
+        amount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                final String addressText = address.getText().toString();
+                final String phoneNumberText = phoneNumber.getText().toString();
+                final String quantityText = quantity.getText().toString();
+                int foodPriceInt = Integer.parseInt(foodPrice); // convert to int
+                int foodQuantityInt = Integer.parseInt(quantityText); // convert to int
+                int amountToPay = foodPriceInt*foodQuantityInt;
+                final String amountToPayText = Integer.toString(amountToPay);
 
 
-       /* categories.add("Singara");
-        categories.add("Somosa");
-        categories.add("Burger");
-        categories.add("Sandwich");
-        categories.add("Hot dog");
-        categories.add("Petis");*/
+                if(addressText.equals(null) || phoneNumberText.equals(null) || quantityText.equals(null))
+                {
+                    Toast.makeText(OrderFood.this, "Insert value", Toast.LENGTH_SHORT).show();
+                }
+                else if(foodItemName.equals(null))
+                {
+                    Toast.makeText(OrderFood.this, "Please select a food item", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(OrderFood.this);
+                    builder.setMessage("Total amount is : "+amountToPay);
+                    //builder.setTitle("Amount of money");
+                    builder.setPositiveButton("Order", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+
+                            Map<String, String> info = new HashMap<String, String>();
+
+                            info.put("Food name",foodItemName); //inserting name
+                            info.put("Price of food per piece",foodPrice); //inserting name
+                            info.put("Quantity of food",quantityText); // inserting price
+                            info.put("Total amount",amountToPayText); // inserting price
+                            info.put("Customer address",addressText); // inserting price
+                            info.put("Customer phone number",phoneNumberText); // inserting price
+
+
+                            firebase.push().setValue(info); // inserting in firebase
+                            Toast.makeText(OrderFood.this, "Order Successful", Toast.LENGTH_SHORT).show();
+
+                            Intent intent = new Intent(OrderFood.this, NormalUser.class);
+                            startActivity(intent);
+
+                        }
+                    });
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            finish();
+
+                        }
+                    });
+                    builder.show();
+                }
+
+
+            }
+        });
+
+
+
+
+
 
 
     }
@@ -86,8 +154,13 @@ public class OrderFood extends AppCompatActivity implements OnItemSelectedListen
 
         firebase.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot studentSnapshot : dataSnapshot.getChildren()) {
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                progressDialog = new ProgressDialog(OrderFood.this);
+                progressDialog.setMessage("Loading");
+                progressDialog.show();
+                for (DataSnapshot studentSnapshot : dataSnapshot.getChildren())
+                {
                     Food food = studentSnapshot.getValue(Food.class);
                     // String str = studentSnapshot.getKey();
 
@@ -98,8 +171,10 @@ public class OrderFood extends AppCompatActivity implements OnItemSelectedListen
                     //Toast.makeText(getApplicationContext(),student.getName()+" "+student.getAge(),Toast.LENGTH_SHORT).show();
                 }
 
-                if (foodNameList.size() > 0) {
+                if (foodNameList.size() > 0)
+                {
                     // Creating adapter for spinner
+                    progressDialog.hide();
                     ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(OrderFood.this, android.R.layout.simple_spinner_item, foodNameList);
 
                     // Drop down layout style - list view with radio button
@@ -118,6 +193,35 @@ public class OrderFood extends AppCompatActivity implements OnItemSelectedListen
             }
         });
     }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        // On selecting a spinner item
+        foodItemName = adapterView.getItemAtPosition(i).toString();
+        foodPrice = foodPriceList.get(i);
+
+
+
+
+
+
+        // Showing selected spinner item
+       // Toast.makeText(adapterView.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -148,24 +252,5 @@ public class OrderFood extends AppCompatActivity implements OnItemSelectedListen
     }
 
 
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        // On selecting a spinner item
-        String item = adapterView.getItemAtPosition(i).toString();
-
-        // Showing selected spinner item
-        Toast.makeText(adapterView.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
-
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
-
-    }
 }

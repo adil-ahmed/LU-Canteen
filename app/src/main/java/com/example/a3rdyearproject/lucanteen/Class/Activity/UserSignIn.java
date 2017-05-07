@@ -1,8 +1,10 @@
 package com.example.a3rdyearproject.lucanteen.Class.Activity;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -12,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.a3rdyearproject.lucanteen.Class.JavaClass.CheckNetwork;
 import com.example.a3rdyearproject.lucanteen.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -46,7 +49,8 @@ public class UserSignIn extends AppCompatActivity
         signup = (Button) findViewById(R.id.signup);
         forgotPass = (Button) findViewById(R.id.forgot_password);
         firebaseAuth = FirebaseAuth.getInstance();
-        authStateListener = new FirebaseAuth.AuthStateListener() {
+        authStateListener = new FirebaseAuth.AuthStateListener()
+        {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if(firebaseAuth.getCurrentUser() != null )
@@ -71,18 +75,63 @@ public class UserSignIn extends AppCompatActivity
             }
         };
 
-        signup.setOnClickListener(new View.OnClickListener() {
+        signup.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(UserSignIn.this,UserSignUp.class);
-                startActivity(intent);
+            public void onClick(View view)
+            {
+
+                if(CheckNetwork.isInternetAvailable(UserSignIn.this)) //returns true if internet available
+                {
+
+                    Intent intent = new Intent(UserSignIn.this,UserSignUp.class);
+                    startActivity(intent);
+                }
+                else
+                {
+                    //Toast.makeText(UserSignUp.this,"No Internet Connection",Toast.LENGTH_SHORT).show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(UserSignIn.this);
+                    builder.setMessage("Please enable your internet connection");
+                    builder.setTitle("No Internet");
+                    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            //finish();
+
+                        }
+                    });
+                    builder.show();
+                }
             }
         });
         forgotPass.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(UserSignIn.this,UserForgotPassword.class);
-                startActivity(intent);
+            public void onClick(View view)
+            {
+
+                if(CheckNetwork.isInternetAvailable(UserSignIn.this)) //returns true if internet available
+                {
+
+                    Intent intent = new Intent(UserSignIn.this,UserForgotPassword.class);
+                    startActivity(intent);
+                }
+                else
+                {
+                    //Toast.makeText(UserSignUp.this,"No Internet Connection",Toast.LENGTH_SHORT).show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(UserSignIn.this);
+                    builder.setMessage("Please enable your internet connection");
+                    builder.setTitle("No Internet");
+                    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            //finish();
+
+                        }
+                    });
+                    builder.show();
+                }
             }
         });
 
@@ -90,32 +139,53 @@ public class UserSignIn extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                progressDialog = new ProgressDialog(UserSignIn.this);
-                progressDialog.setMessage("Sign in is on progress");
-                progressDialog.show();
+                if(CheckNetwork.isInternetAvailable(UserSignIn.this)) //returns true if internet available
+                {
 
-                String emailText = email.getText().toString().trim();//ommit fore space
-                String passText = pass.getText().toString().trim();
+                    progressDialog = new ProgressDialog(UserSignIn.this);
+                    progressDialog.setMessage("Sign in is on progress");
+                    progressDialog.show();
 
-                if (TextUtils.isEmpty(emailText) || TextUtils.isEmpty(passText)) {
-                    progressDialog.hide();
-                    Toast.makeText(UserSignIn.this, "Give Data", Toast.LENGTH_SHORT).show();
-                } else {
+                    String emailText = email.getText().toString().trim();//ommit fore space
+                    String passText = pass.getText().toString().trim();
 
-                    firebaseAuth.signInWithEmailAndPassword(emailText, passText).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    if (TextUtils.isEmpty(emailText) || TextUtils.isEmpty(passText)) {
+                        progressDialog.hide();
+                        Toast.makeText(UserSignIn.this, "Give Data", Toast.LENGTH_SHORT).show();
+                    } else {
+
+                        firebaseAuth.signInWithEmailAndPassword(emailText, passText).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                progressDialog.hide();
+                                if (!task.isComplete()) {
+                                    Toast.makeText(UserSignIn.this, "Problem", Toast.LENGTH_SHORT).show();
+                                }
+                                if(!task.isSuccessful())
+                                {
+                                    Toast.makeText(UserSignIn.this, "Wrong email and password", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    }
+                }
+                else
+                {
+                    //Toast.makeText(UserSignUp.this,"No Internet Connection",Toast.LENGTH_SHORT).show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(UserSignIn.this);
+                    builder.setMessage("Please enable your internet connection");
+                    builder.setTitle("No Internet");
+                    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                         @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            progressDialog.hide();
-                            if (!task.isComplete()) {
-                                Toast.makeText(UserSignIn.this, "Problem", Toast.LENGTH_SHORT).show();
-                            }
-                            if(!task.isSuccessful())
-                            {
-                                Toast.makeText(UserSignIn.this, "Wrong email and password", Toast.LENGTH_SHORT).show();
-                            }
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            //finish();
+
                         }
                     });
+                    builder.show();
                 }
+
 
 
             }
