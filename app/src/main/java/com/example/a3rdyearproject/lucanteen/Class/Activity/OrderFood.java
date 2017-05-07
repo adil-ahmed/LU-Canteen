@@ -125,7 +125,8 @@ public class OrderFood extends AppCompatActivity implements OnItemSelectedListen
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
 
-                            finish();
+                           // finish();
+                            Toast.makeText(OrderFood.this, "Order Cancelled", Toast.LENGTH_SHORT).show();
 
                         }
                     });

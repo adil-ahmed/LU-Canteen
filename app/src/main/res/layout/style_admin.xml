@@ -10,7 +10,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_marginTop="20dp"
-        android:layout_weight="2"
+        android:layout_weight="4"
 
         >
 
@@ -29,7 +29,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_marginTop="20dp"
-        android:layout_weight="1"
+        android:layout_weight="2"
 
         >
 
@@ -43,33 +43,6 @@
             />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_marginTop="0dp"
-        android:layout_marginBottom="10dp"
-        android:layout_weight="3"
 
-
-        >
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            >
-
-
-            <Switch
-                android:id="@+id/available"
-                android:layout_width="40dp"
-                android:layout_height="wrap_content"
-                android:checked="true"
-
-                />
-        </RelativeLayout>
-
-
-    </LinearLayout>
 
 </LinearLayout>
