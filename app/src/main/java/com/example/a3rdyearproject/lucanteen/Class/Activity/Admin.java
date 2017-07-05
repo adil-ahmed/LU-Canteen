@@ -1,5 +1,6 @@
 package com.example.a3rdyearproject.lucanteen.Class.Activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -35,15 +36,21 @@ public class Admin extends AppCompatActivity {
     private ListView listView;
     public ArrayList<String> foodNameList;
     public ArrayList<String> foodPriceList;
+    public ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin);
 
+
         listView = (ListView) findViewById(R.id.listView);
         //foodNameList = new ArrayList<String>();
         //foodPriceList = new ArrayList<String>();
+        progressDialog = new ProgressDialog(Admin.this);
+        progressDialog.setMessage("Loading");
+        progressDialog.show();
+
 
 
       //  dataReady();
@@ -53,9 +60,13 @@ public class Admin extends AppCompatActivity {
         FirebaseListAdapter<Food> adapter = new FirebaseListAdapter<Food>(Admin.this,Food.class,
                 R.layout.style_admin,databaseReference.child("Food"))
         {
+            //progressDialog.show();
+
             @Override
             protected void populateView(View v, Food model, int position)
             {
+
+
                 TextView foodName = (TextView) v.findViewById(R.id.foodNameStyle);
                 TextView foodPrice = (TextView) v.findViewById(R.id.foodPriceStyle);
              // foodNameList.add(model.getFoodName()); // from student class taking the list of name
@@ -63,14 +74,20 @@ public class Admin extends AppCompatActivity {
 
                 foodName.setText(model.getFoodName());
                 foodPrice.setText(model.getFoodPrice());
+                //progressDialog.show();
+                progressDialog.hide();
 
             }
 
 
 
+
         };
+
+
         listView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+       //
 
 
     }

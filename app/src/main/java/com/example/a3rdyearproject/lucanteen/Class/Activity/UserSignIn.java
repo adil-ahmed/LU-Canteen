@@ -39,10 +39,10 @@ public class UserSignIn extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_sign_in);
 
-        imageView = (ImageView) findViewById(R.id.imageView);
+        /*imageView = (ImageView) findViewById(R.id.imageView);
         Picasso.with(getApplicationContext()).load
                 ("https://lh3.googleusercontent.com/ihHvROvOOPfWoPYKaFkz0Yqb6lswILNLR_UYkSQqFwthF3vqZKCUowB5fKXaxRvCBMYaNb8=s140")
-                .into(imageView);
+                .into(imageView);*/
         email = (EditText) findViewById(R.id.email);
         pass = (EditText) findViewById(R.id.pass);
         signin = (Button) findViewById(R.id.submit);

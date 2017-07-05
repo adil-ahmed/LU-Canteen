@@ -54,7 +54,7 @@ public class OrderFood extends AppCompatActivity implements OnItemSelectedListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_order_food);
+        setContentView(R.layout.activity_order_food); ///to connect with xml
         foodCategory = (Spinner) findViewById(R.id.orderSpinner);
         quantity = (EditText) findViewById(R.id.foodQuantity);
         address = (EditText) findViewById(R.id.address);
@@ -146,20 +146,22 @@ public class OrderFood extends AppCompatActivity implements OnItemSelectedListen
     }
 
 
+
     public void dataReady() {
 
         foodNameList = new ArrayList<String>();
         foodPriceList = new ArrayList<String>();
 
         firebase = new Firebase("https://lu-canteen.firebaseio.com/Food");
+        progressDialog = new ProgressDialog(OrderFood.this);
+        progressDialog.setMessage("Loading");
+        progressDialog.show();
 
         firebase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
-                progressDialog = new ProgressDialog(OrderFood.this);
-                progressDialog.setMessage("Loading");
-                progressDialog.show();
+
                 for (DataSnapshot studentSnapshot : dataSnapshot.getChildren())
                 {
                     Food food = studentSnapshot.getValue(Food.class);
@@ -230,7 +232,7 @@ public class OrderFood extends AppCompatActivity implements OnItemSelectedListen
         /*getMenuInflater().inflate(R.menu.main, menu);
         return true;*/
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu2, menu);
+        inflater.inflate(R.menu.menu3, menu);
         return true;
     }
 

@@ -1,5 +1,6 @@
 package com.example.a3rdyearproject.lucanteen.Class.Activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ public class NormalUser extends AppCompatActivity
 
     private Firebase firebase;
     private ListView listView;
+    ProgressDialog progressDialog;
     //private ArrayList<String> foodNameList;
     //private ArrayList<String> foodPriceList;
     //private Switch sswitch;
@@ -42,6 +44,9 @@ public class NormalUser extends AppCompatActivity
         setContentView(R.layout.activity_normal_user);
         listView = (ListView) findViewById(R.id.listView);
         //sswitch = (Switch) findViewById(R.id.available);
+        progressDialog = new ProgressDialog(NormalUser.this);
+        progressDialog.setMessage("Loading");
+        progressDialog.show();
 
 
        // dataReady();
@@ -58,6 +63,7 @@ public class NormalUser extends AppCompatActivity
                 TextView foodPrice = (TextView) v.findViewById(R.id.foodPriceStyle);
                 foodName.setText(model.getFoodName());
                 foodPrice.setText(model.getFoodPrice());
+                progressDialog.hide();
 
             }
 
